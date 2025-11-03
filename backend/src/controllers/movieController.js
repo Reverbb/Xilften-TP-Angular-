@@ -65,22 +65,60 @@ const searchMovies = async (req, res) => {
   try {
     const allMovies = await loadMovies();
     const limitedMovies = allMovies.slice(0, MAX_MOVIES);
-    const query = req.query.q ? req.query.q.toLowerCase() : '';
+    const query = req.query.q ? req.query.q.toLowerCase().trim() : '';
 
-    const filteredMovies = limitedMovies.filter(movie =>
-      movie.title.toLowerCase().includes(query) ||
-      movie.director.toLowerCase().includes(query) ||
-      movie.genres.toLowerCase().includes(query) ||
-      (movie.actor1 && movie.actor1.toLowerCase().includes(query)) ||
-      (movie.actor2 && movie.actor2.toLowerCase().includes(query))
-    );
+    if (!query) {
+      return res.json({
+        total: 0,
+        data: []
+      });
+    }
 
+    // Recherche améliorée : cherche dans plusieurs champs
+    const filteredMovies = limitedMovies.filter(movie => {
+      const searchFields = [
+        movie.title.toLowerCase(),
+        movie.director.toLowerCase(),
+        movie.genres.toLowerCase(),
+        movie.actor1 ? movie.actor1.toLowerCase() : '',
+        movie.actor2 ? movie.actor2.toLowerCase() : '',
+        movie.actor3 ? movie.actor3.toLowerCase() : '',
+        movie.plotKeywords ? movie.plotKeywords.toLowerCase() : ''
+      ].join(' ');
+
+      // Cherche si la query est contenue dans n'importe quel champ
+      // Supporte aussi la recherche partielle (ex: "spid" trouvera "spider-man")
+      return searchFields.includes(query);
+    });
+
+    // Trie les résultats par pertinence
+    const sortedMovies = filteredMovies.sort((a, b) => {
+      const aTitle = a.title.toLowerCase();
+      const bTitle = b.title.toLowerCase();
+      
+      // Priorité 1 : Titre commence par la query
+      const aStartsWith = aTitle.startsWith(query);
+      const bStartsWith = bTitle.startsWith(query);
+      if (aStartsWith && !bStartsWith) return -1;
+      if (!aStartsWith && bStartsWith) return 1;
+      
+      // Priorité 2 : Titre contient la query en début de mot
+      const aWordStart = aTitle.includes(' ' + query) || aTitle.startsWith(query);
+      const bWordStart = bTitle.includes(' ' + query) || bTitle.startsWith(query);
+      if (aWordStart && !bWordStart) return -1;
+      if (!aWordStart && bWordStart) return 1;
+      
+      // Priorité 3 : Note IMDb (meilleurs films en premier)
+      return b.imdbScore - a.imdbScore;
+    });
+
+    // Ajouter les images
     const moviesWithImages = await Promise.all(
-      filteredMovies.map(async (movie) => {
+      sortedMovies.map(async (movie) => {
         const posterUrl = await searchMoviePoster(movie.title, movie.year);
         return {
           ...movie,
-          posterUrl: posterUrl
+          posterUrl: posterUrl || `https://placehold.co/300x450/e50914/ffffff?text=${encodeURIComponent(movie.title.substring(0, 20))}`
         };
       })
     );

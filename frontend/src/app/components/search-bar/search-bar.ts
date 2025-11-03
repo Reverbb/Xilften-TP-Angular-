@@ -12,14 +12,28 @@ import { FormsModule } from '@angular/forms';
 export class SearchBarComponent {
   @Output() search = new EventEmitter<string>();
   searchQuery: string = '';
+  private searchTimeout: any;
 
   onSearch(): void {
     this.search.emit(this.searchQuery);
   }
 
   onInput(): void {
+    // Annule le timeout précédent
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+
     if (this.searchQuery.length === 0) {
       this.search.emit('');
+      return;
+    }
+
+    // Recherche automatique après 500ms d'inactivité
+    if (this.searchQuery.length >= 2) {
+      this.searchTimeout = setTimeout(() => {
+        this.search.emit(this.searchQuery);
+      }, 500);
     }
   }
 }
