@@ -1,2 +1,5 @@
 <app-intro-loader *ngIf="showIntro" (introComplete)="onIntroComplete()"></app-intro-loader>
-<router-outlet *ngIf="!showIntro"></router-outlet>
+<div *ngIf="!showIntro" class="app-container">
+  <app-matrix-rain *ngIf="matrixMode"></app-matrix-rain>
+  <router-outlet></router-outlet>
+</div>

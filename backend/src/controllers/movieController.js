@@ -74,7 +74,6 @@ const searchMovies = async (req, res) => {
       });
     }
 
-    // Recherche améliorée : cherche dans plusieurs champs
     const filteredMovies = limitedMovies.filter(movie => {
       const searchFields = [
         movie.title.toLowerCase(),
@@ -86,12 +85,9 @@ const searchMovies = async (req, res) => {
         movie.plotKeywords ? movie.plotKeywords.toLowerCase() : ''
       ].join(' ');
 
-      // Cherche si la query est contenue dans n'importe quel champ
-      // Supporte aussi la recherche partielle (ex: "spid" trouvera "spider-man")
       return searchFields.includes(query);
     });
 
-    // Trie les résultats par pertinence
     const sortedMovies = filteredMovies.sort((a, b) => {
       const aTitle = a.title.toLowerCase();
       const bTitle = b.title.toLowerCase();
@@ -112,7 +108,6 @@ const searchMovies = async (req, res) => {
       return b.imdbScore - a.imdbScore;
     });
 
-    // Ajouter les images
     const moviesWithImages = await Promise.all(
       sortedMovies.map(async (movie) => {
         const posterUrl = await searchMoviePoster(movie.title, movie.year);

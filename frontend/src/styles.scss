@@ -15,3 +15,197 @@ a {
   text-decoration: none;
   color: inherit;
 }
+// Mode Matrix - Easter Egg
+body.matrix-mode {
+  background: #0d0d0d !important;
+  animation: matrixGlitch 0.1s infinite;
+  
+  * {
+    color: #00ff41 !important;
+    text-shadow: 0 0 10px #00ff41 !important;
+  }
+  
+  .navbar {
+    background: linear-gradient(to bottom, rgba(0, 20, 0, 0.95), transparent) !important;
+    border-bottom: 2px solid #00ff41;
+  }
+  
+  .movie-card {
+    background: rgba(0, 30, 0, 0.8) !important;
+    border: 1px solid #00ff41 !important;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3) !important;
+    
+    &:hover {
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.6) !important;
+      transform: translateY(-10px) scale(1.02);
+    }
+  }
+  
+  .pagination-btn,
+  .page-number {
+    background: rgba(0, 30, 0, 0.8) !important;
+    border-color: #00ff41 !important;
+    
+    &.active {
+      background: #00ff41 !important;
+      color: #000 !important;
+      text-shadow: none !important;
+    }
+  }
+  
+  button {
+    background: rgba(0, 30, 0, 0.8) !important;
+    border: 1px solid #00ff41 !important;
+    
+    &:hover:not(:disabled) {
+      background: #00ff41 !important;
+      color: #000 !important;
+      text-shadow: none !important;
+    }
+  }
+  
+  // Effet de pluie de code
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 65, 0.03) 2px,
+        rgba(0, 255, 65, 0.03) 4px
+      );
+    pointer-events: none;
+    z-index: 9998;
+    animation: matrixRain 0.3s linear infinite;
+  }
+  router-outlet + * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@keyframes matrixGlitch {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(5deg); }
+}
+
+@keyframes matrixRain {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+// Message d'activation Konami
+.konami-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.95);
+  padding: 40px 60px;
+  border-radius: 10px;
+  border: 3px solid #00ff41;
+  box-shadow: 0 0 50px rgba(0, 255, 65, 0.8);
+  animation: konamiAppear 0.5s ease-out;
+  
+  &.fade-out {
+    animation: konamiFadeOut 1s ease-out forwards;
+  }
+}
+
+.konami-content {
+  text-align: center;
+  
+  h1 {
+    color: #00ff41;
+    font-size: 2.5rem;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 20px #00ff41;
+    animation: konamiPulse 1s ease-in-out infinite;
+  }
+  
+  p {
+    color: #00ff41;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+}
+.konami-content {
+  text-align: center;
+  
+  h1 {
+    color: #00ff41;
+    font-size: 2.5rem;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 20px #00ff41;
+    animation: konamiPulse 1s ease-in-out infinite;
+  }
+  
+  p {
+    color: #00ff41;
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+  }
+  
+  .hint {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 15px;
+  }
+  
+  kbd {
+    display: inline-block;
+    padding: 3px 8px;
+    background: rgba(0, 255, 65, 0.2);
+    border: 1px solid #00ff41;
+    border-radius: 3px;
+    font-family: monospace;
+    font-weight: bold;
+  }
+}
+
+.konami-message.deactivate {
+  .konami-content h1 {
+    color: #ff4444;
+    text-shadow: 0 0 20px #ff4444;
+  }
+  
+  .konami-content p {
+    color: #ff4444;
+  }
+}
+
+@keyframes konamiAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes konamiFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes konamiPulse {
+  0%, 100% {
+    text-shadow: 0 0 20px #00ff41;
+  }
+  50% {
+    text-shadow: 0 0 40px #00ff41, 0 0 60px #00ff41;
+  }
+}

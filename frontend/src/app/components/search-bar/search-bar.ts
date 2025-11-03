@@ -19,7 +19,7 @@ export class SearchBarComponent {
   }
 
   onInput(): void {
-    // Annule le timeout précédent
+
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
