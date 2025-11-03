@@ -1,0 +1,13 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/">
+        <img src="logo-text.png" alt="Xilften" class="brand-logo">
+      </a>
+    </div>
+    
+    <div class="navbar-search">
+      <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    </div>
+  </div>
+</nav>

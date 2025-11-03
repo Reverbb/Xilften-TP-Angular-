@@ -1,0 +1,84 @@
+<app-navbar (search)="onSearch($event)"></app-navbar>
+
+<div class="movie-list-container">
+  <div class="hero-section">
+    <h2>Découvrez des milliers de films</h2>
+    <p>Plus de 500 films référencés</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des films...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredMovies.length === 0" class="no-results">
+    <h3>Aucun film trouvé</h3>
+    <p>Essayez avec d'autres mots-clés</p>
+  </div>
+
+  <div *ngIf="!loading && filteredMovies.length > 0" class="movies-grid">
+    <div class="movie-card" *ngFor="let movie of filteredMovies" [routerLink]="['/movies', movie.id]">
+      <div class="movie-poster">
+        <img [src]="movie.posterUrl" 
+             [alt]="movie.title" 
+             class="poster-image"
+             style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <div class="movie-overlay">
+          <div class="movie-info">
+            <span class="movie-rating">⭐ {{ movie.imdbScore }}</span>
+            <span class="movie-year">{{ movie.year }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="movie-details">
+        <h3 class="movie-title">{{ movie.title }}</h3>
+        <p class="movie-genre">{{ movie.genres }}</p>
+        <p class="movie-director">Réalisé par {{ movie.director }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && totalPages > 1" class="pagination">
+    <button 
+      (click)="goToPage(1)" 
+      [disabled]="currentPage === 1"
+      class="pagination-btn pagination-first"
+      title="Première page">
+      ⏮️
+    </button>
+    
+    <button 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      ← Précédent
+    </button>
+
+    <div class="page-numbers">
+      <button 
+        *ngFor="let pageNum of getPageNumbers()"
+        (click)="goToPage(pageNum)"
+        [class.active]="pageNum === currentPage"
+        [class.dots]="pageNum === -1"
+        [disabled]="pageNum === -1"
+        class="page-number">
+        {{ pageNum === -1 ? '...' : pageNum }}
+      </button>
+    </div>
+
+    <button 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+      class="pagination-btn">
+      Suivant →
+    </button>
+
+    <button 
+      (click)="goToPage(totalPages)" 
+      [disabled]="currentPage === totalPages"
+      class="pagination-btn pagination-last"
+      title="Dernière page">
+      ⏭️
+    </button>
+  </div>
+</div>

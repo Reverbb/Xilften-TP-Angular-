@@ -1,0 +1,2 @@
+<app-intro-loader *ngIf="showIntro" (introComplete)="onIntroComplete()"></app-intro-loader>
+<router-outlet *ngIf="!showIntro"></router-outlet>

@@ -1,0 +1,111 @@
+<div class="movie-detail-container">
+  <button class="back-button" (click)="goBack()">
+    ← Retour
+  </button>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement du film...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error">
+    <h2>Film non trouvé</h2>
+    <p>Le film demandé n'existe pas ou a été supprimé.</p>
+    <button (click)="goBack()" class="error-btn">Retour à la liste</button>
+  </div>
+
+  <div *ngIf="movie && !loading" class="movie-detail">
+    <div class="movie-hero-simple">
+      <div class="hero-content-simple">
+        <div class="hero-poster-simple">
+          <img [src]="movie.posterUrl" [alt]="movie.title">
+        </div>
+        <div class="hero-info-simple">
+          <h1 class="movie-title">{{ movie.title }}</h1>
+          <div class="movie-meta">
+            <span class="rating">⭐ {{ movie.imdbScore }}/10</span>
+            <span class="year">{{ movie.year }}</span>
+            <span class="duration">{{ movie.duration }}</span>
+            <span class="content-rating">{{ movie.contentRating }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="movie-content">
+      <div class="info-section">
+        <h2>Genres</h2>
+        <div class="genre-tags">
+          <span *ngFor="let genre of getGenreList()" class="genre-tag">
+            {{ genre }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Réalisateur</h2>
+        <p class="director">🎬 {{ movie.director }}</p>
+      </div>
+
+      <div class="info-section">
+        <h2>Distribution</h2>
+        <div class="cast-list">
+          <div *ngIf="movie.actor1" class="cast-member">
+            <span class="cast-icon">⭐</span>
+            <span>{{ movie.actor1 }}</span>
+          </div>
+          <div *ngIf="movie.actor2" class="cast-member">
+            <span class="cast-icon">⭐</span>
+            <span>{{ movie.actor2 }}</span>
+          </div>
+          <div *ngIf="movie.actor3" class="cast-member">
+            <span class="cast-icon">⭐</span>
+            <span>{{ movie.actor3 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section" *ngIf="movie.plotKeywords">
+        <h2>Mots-clés</h2>
+        <p class="keywords">{{ movie.plotKeywords }}</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Langue</h3>
+          <p>{{ movie.language || 'N/A' }}</p>
+        </div>
+        <div class="info-card">
+          <h3>Pays</h3>
+          <p>{{ movie.country || 'N/A' }}</p>
+        </div>
+        <div class="info-card">
+          <h3>Budget</h3>
+          <p>{{ movie.budget || 'N/A' }}</p>
+        </div>
+        <div class="info-card">
+          <h3>Recettes</h3>
+          <p>{{ movie.gross || 'N/A' }}</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>Statistiques</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-label">Votes IMDb</span>
+            <span class="stat-value">{{ movie.numVotedUsers | number }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Likes Facebook</span>
+            <span class="stat-value">{{ movie.facebookLikes | number }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button *ngIf="movie.imdbLink" (click)="openImdb()" class="imdb-button">
+        Voir sur IMDb
+      </button>
+    </div>
+  </div>
+</div>
